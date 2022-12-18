@@ -1,8 +1,10 @@
 from database import *
+import MySQLdb
+
 
 class Interface:
-    def __init__(self, cluster: list):
-        self.cluster = cluster
+    def __init__(self, clusters: list): #, conn: MySQLdb.Connection):
+        self.clusters = clusters
 
         self.dataframes = {
         'Funcionário': {'columns-type': {'cpf': str, 'nome': str, 'num_dep': int},
@@ -12,35 +14,41 @@ class Interface:
         }
 
         self.replica_count = 1
-        
         self.add_neighbors()
-        self.add_table()
+        self.query = ""
 
-        
+    def rcv_query(self, query):
+        self.query = query
+
+        return 
+
+
     def add_neighbors(self):
-        for db in self.cluster:
-            copy = self.cluster.copy()
+        for db in self.clusters:
+            copy = self.clusters.copy()
             copy.remove(db)
             db.add_neighbor(copy)
 
-    def add_table(self):
-        for db in self.cluster:
-            db.add_table('Funcionário', self.dataframes['Funcionário']['columns-type'])
-            db.add_table('Departamento', self.dataframes['Departamento']['columns-type'])
 
-    def add_data(self, table, data: dict):
-        partition_by = self.dataframes[table]['partition_by']
-        partition_interval = self.dataframes[table]['partition_interval']
-        partition_init = self.dataframes[table]['partition_init']
+    def add_data(self, table, query):
+        pass
 
-        number = data[partition_by]
+    def remove_data(self):
+        pass
 
-        if 1 <= number <= 2:
-            self.cluster[0].add_data(self.replica_count, table, data)
-        elif 3 <= number <= 4:
-            self.cluster[1].add_data(self.replica_count, table, data)
-        elif number == 5:
-            self.cluster[2].add_data(self.replica_count, table, data)
+    def update_data(self):
+        pass
+
+    def select_data(self):
+        pass
+
+    def select_data_by_database(self, database: Database):
+        pass
+
+
+
+
+
 
 
 

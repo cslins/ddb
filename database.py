@@ -1,12 +1,23 @@
 import pandas as pd
-
+import MySQLdb
+import credentials
+import re
 
 class Database:
     def __init__(self, name: str):
         self.name: str = name
-        self.data: dict = {}
+
+        self.conn: MySQLdb.Connection = MySQLdb.connect(
+            host=credentials.hostname,
+            user=credentials.username,
+            passwd=credentials.password,
+            db=name
+        )
+
         self.metadata: dict = {}
         self.neighbors: list = []
+        self.cursor = self.conn.cursor()
+
 
     def add_neighbor(self, neighbors):
         for database in neighbors:
@@ -16,38 +27,58 @@ class Database:
         for nb in self.neighbors:
             print(nb.name)
 
-    def add_table(self, table_name, columns_type):
-        df: pd.DataFrame = pd.DataFrame(columns=columns_type.keys())
-        self.data[table_name] = df
+    def add_data(self, replication_count, query):
+        query = """
+INSERT INTO departamento (id, nome)
+VALUES
+    (1, "Memes"),
+    (2, "Administrativo"),
+    (3, "Financeiro"),
+    (4, "Memes"),
+    (5, "Administrativo"),
+    (6, "Financeiro"),
+    (7, "Memes"),
+    (8, "Administrativo"),
+    (9, "Financeiro"),
+"""
+        query_broken: list[str] = query.split("VALUES")  # ["INSERT INTO", "()\n()\n()"]
 
-        for k, v in columns_type.items():
-            df[k] = df[k].astype(v)
+        insert_into = query_broken[0].split('(')
+        table = insert_into[0][12:].strip()
+        attributes = insert_into[1][:-2].split(',')
 
-        print(table_name, 'adicionada em', self.name)
+        values = query_broken[1].split("),")
+        values_extracted = [v.strip()[1:].split(',') for v in values]
+        values_needed = [v for v in values_extracted if len(v) == len(attributes)]
+        values_clean = [i.replace('\"', '') for v in values_needed for i in v]
 
-    def add_data(self, replication_count, table, data: dict):
-        self.data[table] = pd.concat([self.data[table], pd.DataFrame([data])], axis=0, ignore_index=True)
-        # self.data[table] = self.data[table].append(data, ignore_index=True)
-        print(self.name, "\n", self.data[table])
+        dict_op = {
+            "table": table,
+            "attributes": attributes,
+            "values": values_clean
+        }
+
+        for i in range(len(self.neighbors) + 1):
+            self.neighbors[0]
+
+        values_to_send = [1, '"Pesquisa"']
+
+        query_distributed = f"""
+        INSERT INTO {table} ({str(",".join([str(a) for a in attributes]))})
+        VALUES ({str(",".join([str(v) for v in values_to_send]))})
+        """
+        print(query_distributed)
+        self.cursor.execute(query_distributed)
+        self.conn.commit()
 
         # comunicação
         if replication_count > 0:
-            self.neighbors[0].add_data(replication_count - 1, table, data)
+            self.neighbors[0].add_data(replication_count - 1, query)
 
-    def remove_data(self, replication_count, table, condition=None):
-        if condition is None:
-            self.data[table] = self.data[table][0:0]
-        else:
-            mask = f"self.data['{table}']['{condition['name']}'] {condition['operator']} {condition['param']}"
-            print("\n",eval(mask))
-            self.data[table] = self.data[table].drop(self.data[table][eval(mask)].index)
+    def remove_data(self, replication_count, query):
 
-
-        ##comunicacao
         if replication_count > 0:
-            self.neighbors[0].remove_data(replication_count - 1, table, condition)
-
-        print(self.name, "\n", self.data[table])
+            self.neighbors[0].remove_data(replication_count - 1, query)
 
     def update_data(self, replication_count, table, data: dict, condition=None):
         pass
@@ -56,7 +87,10 @@ class Database:
         pass
 
     def get_data(self):
-        return self.data
 
-    def send_data(self, database):
-        pass
+        self.cursor.execute("SELECT id, nome, cpf, n_departamento FROM funcionario")
+        r1 = self.cursor.fetchall()
+
+        self.cursor.execute("SELECT id, nome FROM departamento")
+        r2 = self.cursor.fetchall()
+        return r1, r2
