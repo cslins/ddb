@@ -23,7 +23,7 @@ databases_tabelas = {'db1':{'Funcionario':{'nome_func':['fulano silva', 'fulano 
                             'Departamento':{'nome_dep':['departamento 2'], 'num_dep':[2]}}}
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def hello():
     
     all_headers_departamento = list(tabela_departamento.keys())
@@ -39,11 +39,27 @@ def hello():
     dbs_tables = dbs[1]
     dbs = dbs[0]
     
+    
+    
+    returned_headers, returned_rows = None, None
+    
+    print(request.form.get('sqlcommands'))
+    
+    if request.method == 'POST' and request.form.get('sqlcommands') != None:
+        
+        #pega o retorno da query aqui embaixo
+        returned_query = {'Funcionario':{'nome_dep':['departamento 1', 'departamento 2', 'departamento 3'], 'num_dep':[1,2,3]}}
+        #print(list(returned_query[list(returned_query.keys())[0]].keys()))
+        returned_headers = list(returned_query[list(returned_query.keys())[0]].keys())
+        returned_rows = list(zip(*returned_query[list(returned_query.keys())[0]].values()))
+        
+    
 
 
     return render_template('index.html', headers_departamento = all_headers_departamento,
                            rows_departamento = all_rows_departamento, headers_funcionario = all_headers_funcionario,
-                           rows_funcionario = all_rows_funcionario, dbs = dbs, dbs_tables = dbs_tables)
+                           rows_funcionario = all_rows_funcionario, dbs = dbs, dbs_tables = dbs_tables,
+                           returned_headers = returned_headers, returned_rows = returned_rows)
 
 
 
@@ -52,11 +68,15 @@ def hello():
 def insert_info():
     
     
-    
-    
     comandos_sql = request.form.get('sqlcommands')
     
     print(comandos_sql)
+    
+    #pego o retorno de uma função aqui
+    
+    returned_query = {'nome_dep':['departamento 1', 'departamento 2', 'departamento 3'], 'num_dep':[1,2,3]}
+    
+    
     
     return redirect('/')
 
