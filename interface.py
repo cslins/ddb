@@ -7,19 +7,20 @@ class Interface:
         self.clusters = clusters
 
         self.dataframes = {
-        'Funcionário': {'columns-type': {'cpf': str, 'nome': str, 'num_dep': int},
-        'partition_by': 'num_dep', 'partition_init': 1, 'partition_end': 5, 'partition_interval': round(5 / 3)},
-        'Departamento': {'columns-type': {'num': int, 'nome': str},
-         'partition_by': 'num_dep', 'partition_init': 1, 'partition_end': 5, 'partition_interval': round(5 / 3)}
+        'Funcionario': {'columns-type': {'id': int, 'nome': str, 'cpf': str,'n_departamento': int}},
+        'Departamento': {'columns-type': {'id': int, 'nome': str}}
         }
 
         self.replica_count = 1
         self.query = ""
         query = """
-                SELECT id, nome, cpf, n_departamento  FROM funcionario
+                INSERT INTO funcionario (id, nome)
+                VALUES
+                    (4, "Fabiola"),
+                    (5, "Quites")
                 
                 """
-        self.rcv_query(query)
+        #self.rcv_query(query)
 
     # ..
     def rcv_query(self, query):
@@ -165,10 +166,48 @@ class Interface:
 
     #..
     def select_all_database(self):
-        return dict
 
-    def select_data_by_database(self, database: Database):
-        return dict
+        return {'db1': self.select_data_by_database(0),
+                'db2': self.select_data_by_database(1),
+                'db3': self.select_data_by_database(2)}
+
+
+
+
+    def select_data_by_database(self, db: int):
+        func, dep = self.clusters[db].get_data()
+
+        atr_func = list(self.dataframes['Funcionario']['columns-type'].keys())
+        print()
+
+        print(f"Atr_func: {atr_func}")
+        dic = {}
+        for i in range(len(atr_func)):
+            dic[atr_func[i]] = []
+            for n in range(len(func)):
+                dic[atr_func[i]].append(func[n][i])
+
+        print(dic)
+
+        d = {'Funcionario': dic}
+
+        atr_dep = list(self.dataframes['Departamento']['columns-type'].keys())
+        print()
+
+        print(f"Atr_dep: {atr_dep}")
+        dic2 = {}
+        for i in range(len(atr_dep)):
+            dic2[atr_dep[i]] = []
+            for n in range(len(dep)):
+                dic2[atr_dep[i]].append(dep[n][i])
+
+        print(dic2)
+
+        d['Departamento'] = dic2
+
+        print(d)
+
+        return d
 
     # ..
     def select_all(self):

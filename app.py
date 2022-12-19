@@ -1,6 +1,8 @@
 from flask import Flask, redirect, url_for, render_template, request
 from interface import Interface
 from database import Database
+import webbrowser
+from time import sleep
 
 
 app = Flask(__name__)
@@ -38,6 +40,11 @@ cluster = [db1, db2, db3]
 
 interface = Interface(cluster)
 
+
+
+databases_tabelas = interface.select_all_database()
+tabela_funcionario = interface.rcv_query("SELECT id, nome, cpf, n_departamento FROM funcionario")['funcionario']
+tabela_departamento = interface.rcv_query("SELECT id, nome FROM departamento")['departamento']
 
 @app.route('/', methods=["GET", "POST"])
 def hello():

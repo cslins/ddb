@@ -30,22 +30,23 @@ cluster = [db1, db2, db3]
 
 
 inter = Interface(cluster)
+print("p", inter.rcv_query("SELECT id, nome FROM departamento"))
 
 #db1.add_data(1, "")
-
-r1, r2 = db1.get_data()
-
-print(r1, r2)
-
-r1, r2 = db2.get_data()
-
-print(r1, r2)
-
-r1, r2 = db3.get_data()
-
-print(r1, r2)
-
 #
+# r1, r2 = db1.get_data()
+#
+# print(r1, r2)
+#
+# r1, r2 = db2.get_data()
+#
+# print(r1, r2)
+#
+# r1, r2 = db3.get_data()
+#
+# print(r1, r2)
+#
+# #
 #
 # for db in cluster:
 #     db.add_table(df1['table_name'], df1['columns-type'], )
