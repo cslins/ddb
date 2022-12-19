@@ -1,12 +1,10 @@
-# Distributed MongoDB Database Application using AWS
-
-View [Report](/nosql_project.pdf) for detailed description of the project.
-
-To run, use command:
-
-    python app.py
-
-<br />
+# ddb = Distributed DataBases
 
 
-In this project, we created an application related to details of authors. Focus of this project was efficient deployment of database on cloud to enable high latency. To achieve this, we deployed the MongoDB database with 3 Shards in replica sets. We have created a python application to view and modify this data. Note that as the cloud server needs to be stopped due to free tier limit, the application may not work if you try to run it.
+Simulação de Banco de Dados Distribuídos construído para a disciplina de Banco de Dados II, para o Curso de Bacharelado em Ciência da Computação na Universidade Federal do Pará, período 2024.4.
+
+Os objetivos específicos são: 
+
+- Implementar 3 Bancos de Dados centralizados de suporte para a simulação distribuída
+- Mostrar a fragmentação em Bancos Distribuídos
+- Mostrar a replicação em Bancos Distribuídos
