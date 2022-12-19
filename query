@@ -24,14 +24,31 @@ INSERT INTO funcionario (id, nome, cpf, n_departamento)
 DELETE FROM funcionario
 WHERE id>4
 
+----------------------------------------------
 
+DELETE FROM departamento
+WHERE id<2
 ----------------------------------------------
 
 
 UPDATE funcionario
-SET cpf = 5
-WHERE nome='Fabiola'
+SET n_departamento = 3
+WHERE n_departamento = 4
 
 ----------------------------------------------
 
 SELECT id, nome FROM departamento
+WHERE id=2
+----------------------------------------------
+
+SELECT nome FROM departamento
+WHERE id>2
+----------------------------------------------
+
+SELECT id, nome, cpf, n_departamento FROM funcionario
+WHERE nome='Haroldo'
+
+----------------------------------------------
+
+SELECT id, nome FROM funcionario
+WHERE n_departamento=3
