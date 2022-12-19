@@ -24,39 +24,47 @@
 
 
         <!-- Insert Info Section-->
-        <form action="/insert_info" method="post">
+        <form action="/" method="post">
         <section id="about">
             <div class="container px-4">
                 <h1>Comandos SQL</h1> 
                 <div class="row gx-4 justify-content-center">
 
                     <div class="col-lg-8">
-                        <!--
-                        <br><br>
-                        <h2>Departamento</h2>
-                        <label for="dnome">Nome do Departamento:</label><br>
-                        <input type="text" id="dnome" name="dnome"><br><br>
-                        <label for="dnumdep">Número do Departamento:</label><br>
-                        <input type="text" id="dnumdep" name="dnumdep">
 
-                        <br><br><br>
-
-                        <h2>Funcionário</h2>
-                        <label for="fnome">Nome:</label> <br>
-                        <input type="text" id="fnome" name="fnome"><br><br>
-                        <label for="cpf">CPF:</label><br>
-                        <input type="text" id="cpf" name="cpf"><br><br>
-                        <label for="fnumdep">Número do Departamento:</label><br>
-                        <input type="text" id="fnumdep" name="fnumdep">
-
-
-                        <br><br><br>
-//-->                   
                         <br><br><br>
                         <textarea id="w3review" name="sqlcommands" rows="15" cols="120"></textarea>
                         <br><br><br><br>
 
                         <input type="submit" class="btn btn-info" value="Enviar">
+
+                        <br><br><br><br><br><br>
+                        
+                        {% if returned_headers is not none %}
+                        <table class="table table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                {% for header in returned_headers%}
+                                
+                                    <th scope="col">{{header}}</th>
+
+                                {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in returned_rows %}
+                                    <tr>
+                                    {% for value in row %}
+
+                                        <td>{{ value }}</td> 
+
+                                    {% endfor %}
+
+                                    </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>
+                        {% endif %}
                         
                 </div>
             </div>
@@ -134,7 +142,7 @@
 
         <section id="section" style='background-color:#F0F8FF'>
             <div class="container px-4">
-                <h1>Dados por Tabela</h1> 
+                <h1>Dados por Bancos de Dados</h1> 
                 <div class="row gx-4 justify-content-center">
                     <div class="col-lg-8">
 
