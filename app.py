@@ -27,27 +27,30 @@ databases_tabelas = {'db1':{'Funcionario':{'nome_func':['fulano silva', 'fulano 
                             'Departamento':{'nome_dep':['departamento 2'], 'num_dep':[2]}}}
 
 
-db1 = Database('db1')
-db2 = Database('db2')
-db3 = Database('db3')
-
-db1.add_neighbor([db2, db3])
-db2.add_neighbor([db3, db1])
-db3.add_neighbor([db1, db2])
-
-cluster = [db1, db2, db3]
-
-
-interface = Interface(cluster)
 
 
 
-databases_tabelas = interface.select_all_database()
-tabela_funcionario = interface.rcv_query("SELECT id, nome, cpf, n_departamento FROM funcionario")['funcionario']
-tabela_departamento = interface.rcv_query("SELECT id, nome FROM departamento")['departamento']
+
+
+
+
 
 @app.route('/', methods=["GET", "POST"])
 def hello():
+    db1 = Database('db1')
+    db2 = Database('db2')
+    db3 = Database('db3')
+
+    db1.add_neighbor([db2, db3])
+    db2.add_neighbor([db3, db1])
+    db3.add_neighbor([db1, db2])
+
+    cluster = [db1, db2, db3]
+
+    interface = Interface(cluster)
+    databases_tabelas = interface.select_all_database()
+    tabela_funcionario = interface.rcv_query("SELECT id, nome, cpf, n_departamento FROM funcionario")['funcionario']
+    tabela_departamento = interface.rcv_query("SELECT id, nome FROM departamento")['departamento']
     
     all_headers_departamento = list(tabela_departamento.keys())
     all_rows_departamento = list(zip(*tabela_departamento.values()))
@@ -79,8 +82,24 @@ def hello():
             returned_headers = list(returned_query[list(returned_query.keys())[0]].keys())
             returned_rows = list(zip(*returned_query[list(returned_query.keys())[0]].values()))
         else:
-            returned_headers = list()
-            returned_rows = list()
+            # returned_headers = list()
+            # returned_rows = list()
+            databases_tabelas = interface.select_all_database()
+            tabela_funcionario = interface.rcv_query("SELECT id, nome, cpf, n_departamento FROM funcionario")[
+                'funcionario']
+            tabela_departamento = interface.rcv_query("SELECT id, nome FROM departamento")['departamento']
+
+            all_headers_departamento = list(tabela_departamento.keys())
+            all_rows_departamento = list(zip(*tabela_departamento.values()))
+
+            all_headers_funcionario = list(tabela_funcionario.keys())
+            all_rows_funcionario = list(zip(*tabela_funcionario.values()))
+            dbs = process_dbs(databases_tabelas)
+
+            dbs_tables = dbs[1]
+            dbs = dbs[0]
+
+            returned_headers, returned_rows = None, None
     
 
 

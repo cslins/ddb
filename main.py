@@ -4,7 +4,7 @@ import pandas as pd
 hostname = 'localhost'
 username = 'chuu'
 password = 'chuudid911'
-database = 'db1'
+# database = 'db1'
 
 # conn: MySQLdb.Connection = MySQLdb.connect(
 #     host=hostname,
@@ -63,8 +63,8 @@ for i in range(0, 3):
         id INT AUTO_INCREMENT PRIMARY KEY,
         nome VARCHAR(100),
         cpf VARCHAR(11),
-        n_departamento INT,
-        FOREIGN KEY (n_departamento) REFERENCES departamento(id)
+        n_departamento INT
+
     )
     """
     )
@@ -102,4 +102,4 @@ for i in range(0, 3):
 # )
 # conn.commit()
 
-conn.close()
+    conn.close()

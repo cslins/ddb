@@ -1,15 +1,28 @@
-INSERT INTO funcionario (id, nome)
+INSERT INTO departamento (id, nome)
                 VALUES
-                    (1, "Antonio"),
-                    (2, "Carlos"),
-                    (3, "Haroldo"),
-                    (4, "Fabiola"),
-                    (5, "Quites")
+                    (1, "FINANCEIRO"),
+                    (2, "ADMINISTRATIVO"),
+                    (3, "RH"),
+                    (4, "MARKETING"),
+                    (5, "TI")
+
 
 ----------------------------------------------
 
+INSERT INTO funcionario (id, nome, cpf, n_departamento)
+                VALUES
+                    (1, "Antonio", "14578901",3),
+                    (2, "Carlos", "89535218", 4),
+                    (3, "Haroldo", "1979941", 4),
+                    (4, "Letícia", "7726013", 1),
+                    (5, "Alan", "46469983", 5),
+                    (6, "Heitor", "5094308", 5),
+                    (7, "Gabriela", "54523636", 2),
+                    (8, "Renata", "00364424",2)
+----------------------------------------------
+
 DELETE FROM funcionario
-WHERE nome='Financeiro' OR nome='Administrativo'
+WHERE id>4
 
 
 ----------------------------------------------
@@ -21,4 +34,4 @@ WHERE nome='Fabiola'
 
 ----------------------------------------------
 
-SELECT id, nome, cpf, n_departamento FROM funcionario
+SELECT id, nome FROM departamento
