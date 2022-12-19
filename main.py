@@ -6,13 +6,23 @@ username = 'chuu'
 password = 'chuudid911'
 database = 'db1'
 
+# conn: MySQLdb.Connection = MySQLdb.connect(
+#     host=hostname,
+#     user=username,
+#     passwd=password,
+#     db=database
+# )
+# cursor = conn.cursor()
+
 conn: MySQLdb.Connection = MySQLdb.connect(
     host=hostname,
     user=username,
-    passwd=password,
-    db=database
+    passwd=password
 )
-cursor = conn.cursor()
+
+for i in range(1, 4):
+    with conn.cursor() as cursor:
+        cursor.execute(f'CREATE SCHEMA `db{i}` ;')
 
 # create multiple databases
 # for i in range(0, 2):
@@ -27,7 +37,7 @@ cursor = conn.cursor()
 
 
 # create multiple tables
-for i in range(0, 2):
+for i in range(0, 3):
 
     conn: MySQLdb.Connection = MySQLdb.connect(
         host=hostname,

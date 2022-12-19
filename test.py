@@ -22,6 +22,10 @@ db1 = Database('db1')
 db2 = Database('db2')
 db3 = Database('db3')
 
+db1.add_neighbor([db2, db3])
+db2.add_neighbor([db3, db1])
+db3.add_neighbor([db1, db2])
+
 cluster = [db1, db2, db3]
 
 
@@ -32,10 +36,15 @@ inter = Interface(cluster)
 r1, r2 = db1.get_data()
 
 print(r1, r2)
-# db1.add_neighbor([db2, db3])
-# db2.add_neighbor([db1, db3])
-# db3.add_neighbor([db1, db2])
-#
+
+r1, r2 = db2.get_data()
+
+print(r1, r2)
+
+r1, r2 = db3.get_data()
+
+print(r1, r2)
+
 #
 #
 # for db in cluster:

@@ -1,4 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request
+from interface import Interface
+from database import Database
 
 
 app = Flask(__name__)
@@ -21,6 +23,20 @@ databases_tabelas = {'db1':{'Funcionario':{'nome_func':['fulano silva', 'fulano 
                       'num_dep':[1,1], 'cpf':['0003', '0004']},
                             
                             'Departamento':{'nome_dep':['departamento 2'], 'num_dep':[2]}}}
+
+
+db1 = Database('db1')
+db2 = Database('db2')
+db3 = Database('db3')
+
+db1.add_neighbor([db2, db3])
+db2.add_neighbor([db3, db1])
+db3.add_neighbor([db1, db2])
+
+cluster = [db1, db2, db3]
+
+
+interface = Interface(cluster)
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -48,11 +64,16 @@ def hello():
     if request.method == 'POST' and request.form.get('sqlcommands') != None:
         
         #pega o retorno da query aqui embaixo
-        returned_query = {'Funcionario':{'nome_dep':['departamento 1', 'departamento 2', 'departamento 3'], 'num_dep':[1,2,3]}}
+        returned_query = interface.rcv_query(request.form.get('sqlcommands'))
+
+        # returned_query = {'Funcionario':{'nome_dep':['departamento 1', 'departamento 2', 'departamento 3'], 'num_dep':[1,2,3]}}
         #print(list(returned_query[list(returned_query.keys())[0]].keys()))
-        returned_headers = list(returned_query[list(returned_query.keys())[0]].keys())
-        returned_rows = list(zip(*returned_query[list(returned_query.keys())[0]].values()))
-        
+        if returned_query != {}:
+            returned_headers = list(returned_query[list(returned_query.keys())[0]].keys())
+            returned_rows = list(zip(*returned_query[list(returned_query.keys())[0]].values()))
+        else:
+            returned_headers = list()
+            returned_rows = list()
     
 
 

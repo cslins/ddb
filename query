@@ -1,0 +1,24 @@
+INSERT INTO funcionario (id, nome)
+                VALUES
+                    (1, "Antonio"),
+                    (2, "Carlos"),
+                    (3, "Haroldo"),
+                    (4, "Fabiola"),
+                    (5, "Quites")
+
+----------------------------------------------
+
+DELETE FROM funcionario
+WHERE nome='Financeiro' OR nome='Administrativo'
+
+
+----------------------------------------------
+
+
+UPDATE funcionario
+SET cpf = 5
+WHERE nome='Fabiola'
+
+----------------------------------------------
+
+SELECT id, nome, cpf, n_departamento FROM funcionario
